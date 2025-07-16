@@ -39,6 +39,18 @@ public class PlayerController : MonoBehaviour
         UpdateHealthVisual();
     }
 
+    void Awake()
+    {
+        if (healthDisplay == null)
+            healthDisplay = FindObjectOfType<HealthDisplay>();
+
+        if (deathScreen == null)
+            deathScreen = GameObject.Find("DeathScreen"); // or your exact path/name
+
+        currentHealth = maxHealth;
+        UpdateHealthVisual();
+    }
+    
     void Update()
     {
         //freezes input if the player dies
@@ -98,8 +110,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // public void TakeDamage(int damage)
+    // {
+    //     currentHealth -= damage;
+    //     currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+    //     UpdateHealthVisual();
+    //
+    //     if (currentHealth <= 0)
+    //     {
+    //         Die();
+    //     }
+    // }
+    
     public void TakeDamage(int damage)
     {
+        Debug.Log($"Player taking damage: {damage}");
         currentHealth -= damage;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthVisual();
@@ -117,16 +142,34 @@ public class PlayerController : MonoBehaviour
         UpdateHealthVisual();
     }
     
+    // public void Die()
+    // {
+    //     isDead = true;
+    //     
+    //     if (deathScreen != null)
+    //     {
+    //         deathScreen.SetActive(true);
+    //     }
+    //     
+    //     //restart level after waiting for 2 seconds
+    //     StartCoroutine(WaitBeforeRestart());
+    // }
+    
     public void Die()
     {
+        Debug.Log("Player died");
         isDead = true;
-        
+
         if (deathScreen != null)
         {
             deathScreen.SetActive(true);
+            Debug.Log("Death screen activated");
         }
-        
-        //restart level after waiting for 2 seconds
+        else
+        {
+            Debug.LogWarning("Death screen reference is null!");
+        }
+    
         StartCoroutine(WaitBeforeRestart());
     }
 
@@ -136,11 +179,24 @@ public class PlayerController : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     
+    // void UpdateHealthVisual()
+    // {
+    //     if (healthDisplay != null)
+    //     {
+    //         healthDisplay.SetHealth(currentHealth);
+    //     }
+    // }
+    
     void UpdateHealthVisual()
     {
+        Debug.Log($"Updating health UI: currentHealth = {currentHealth}");
         if (healthDisplay != null)
         {
             healthDisplay.SetHealth(currentHealth);
+        }
+        else
+        {
+            Debug.LogWarning("HealthDisplay reference is null!");
         }
     }
 }
