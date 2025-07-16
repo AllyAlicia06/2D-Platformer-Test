@@ -309,7 +309,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Slime1_Idle_body_facing_0: 680320368826205907
+      Slime1_Idle_body_facing_1: -9042124952197537955
+      Slime1_Idle_body_facing_2: -4423001013474451818
+      Slime1_Idle_body_facing_3: -1861617670199888435
+      Slime1_Idle_body_facing_4: -4995591615183993071
+      Slime1_Idle_body_facing_5: -5737203029109538835
+      Slime1_Idle_body_facing_6: -9185754236982747962
+      Slime1_Idle_body_facing_7: 436538685585784984
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

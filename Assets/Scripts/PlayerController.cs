@@ -30,12 +30,47 @@ public class PlayerController : MonoBehaviour
     public GameObject deathScreen;
     private bool isDead = false;
     
+    // void Start()
+    // {
+    //     rb = GetComponent<Rigidbody2D>();
+    //     rb.freezeRotation = true; //so the player doesnt weirdly rotate when falling
+    //     anim = GetComponent<Animator>();
+    //     currentHealth = maxHealth;
+    //     UpdateHealthVisual();
+    // }
+    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        rb.freezeRotation = true; //so the player doesnt weirdly rotate when falling
+        rb.freezeRotation = true;
         anim = GetComponent<Animator>();
         currentHealth = maxHealth;
+
+        // Automatically find UI references
+        if (healthDisplay == null)
+            healthDisplay = FindObjectOfType<HealthDisplay>();
+
+        if (deathScreen == null)
+        {
+            GameObject canvas = GameObject.Find("Canvas");
+            if (canvas != null)
+            {
+                Transform found = canvas.transform.Find("DeathScreen");
+                if (found != null)
+                {
+                    deathScreen = found.gameObject;
+                }
+                else
+                {
+                    Debug.LogWarning("DeathScreen not found under Canvas!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Canvas not found!");
+            }
+        }
+
         UpdateHealthVisual();
     }
 
