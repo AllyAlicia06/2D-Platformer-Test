@@ -21,4 +21,13 @@ public class ScoreDisplay : MonoBehaviour
         score = Mathf.Clamp(score, 0, scoreSprites.Length - 1);
         image.sprite = scoreSprites[score];
     }
+    
+    void Start()
+    {
+        // Set the sprite according to the current score on scene start
+        if (GameManager.instance != null)
+        {
+            SetScore(GameManager.instance.score);
+        }
+    }
 }

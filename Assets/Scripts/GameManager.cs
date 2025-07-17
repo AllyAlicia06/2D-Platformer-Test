@@ -190,12 +190,13 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public int score = 0;
-    public ScoreDisplay[] scoreDisplay;
+    //public ScoreDisplay[] scoreDisplay;
 
     private GameObject pauseMenu;
     private GameObject gameHUD;
     private GameObject deathScreen;
     private GameObject mainMenu;
+    private ScoreDisplay scoreDisplay;
 
     private bool isPaused = false;
 
@@ -213,6 +214,8 @@ public class GameManager : MonoBehaviour
         }
 
         Time.timeScale = 1f;
+        
+        scoreDisplay = FindObjectOfType<ScoreDisplay>();
     }
 
     void OnEnable()
@@ -225,11 +228,55 @@ public class GameManager : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    // void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    // {
+    //     isPaused = false;
+    //     Time.timeScale = 1f;
+    //
+    //     GameObject canvas = GameObject.Find("Canvas");
+    //
+    //     if (canvas != null)
+    //     {
+    //         pauseMenu = canvas.transform.Find("PauseMenu")?.gameObject;
+    //         gameHUD = canvas.transform.Find("GameHUD")?.gameObject;
+    //         deathScreen = canvas.transform.Find("DeathScreen")?.gameObject;
+    //         mainMenu = canvas.transform.Find("MainMenu")?.gameObject;
+    //
+    //         if (scene.name == "SampleScene")
+    //         {
+    //             if (pauseMenu != null) pauseMenu.SetActive(false);
+    //             if (gameHUD != null) gameHUD.SetActive(true);
+    //             if (deathScreen != null) deathScreen.SetActive(false);
+    //             if (mainMenu != null) mainMenu.SetActive(false);
+    //         }
+    //         else if (scene.name == "MainMenu")
+    //         {
+    //             if (pauseMenu != null) pauseMenu.SetActive(false);
+    //             if (gameHUD != null) gameHUD.SetActive(false);
+    //             if (deathScreen != null) deathScreen.SetActive(false);
+    //             if (mainMenu != null) mainMenu.SetActive(true);
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Debug.LogWarning("Canvas not found in scene: " + scene.name);
+    //         pauseMenu = null;
+    //         gameHUD = null;
+    //         deathScreen = null;
+    //         mainMenu = null;
+    //     }
+    // }
+    
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         isPaused = false;
         Time.timeScale = 1f;
 
+        if (scene.name == "SampleScene")
+        {
+            ResetGame();  // This resets score and updates UI when starting gameplay scene.
+        }
+        
         GameObject canvas = GameObject.Find("Canvas");
 
         if (canvas != null)
@@ -257,11 +304,13 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Canvas not found in scene: " + scene.name);
-            pauseMenu = null;
-            gameHUD = null;
-            deathScreen = null;
-            mainMenu = null;
         }
+
+        scoreDisplay = FindObjectOfType<ScoreDisplay>();
+        if (scoreDisplay == null)
+            Debug.LogWarning("ScoreDisplay NOT found in scene: " + scene.name);
+        else
+            scoreDisplay.SetScore(score);  // Force UI update on scene load
     }
 
     void Update()
@@ -275,18 +324,26 @@ public class GameManager : MonoBehaviour
 
     public void AddScore(int scoreToAdd)
     {
+        // score += scoreToAdd;
+        // UpdateScoreVisual(score);
         score += scoreToAdd;
-        UpdateScoreVisual(score);
-    }
+        if (scoreDisplay == null)
+            scoreDisplay = FindObjectOfType<ScoreDisplay>();
 
-    void UpdateScoreVisual(int currentScore)
-    {
-        if (scoreDisplay.Length > 0)
+        if (scoreDisplay != null)
         {
-            int spriteIndex = Mathf.Clamp(currentScore, 0, scoreDisplay[0].scoreSprites.Length - 1);
-            scoreDisplay[0].SetScore(spriteIndex);
+            scoreDisplay.SetScore(score); // Update UI to current score
         }
     }
+
+    // void UpdateScoreVisual(int currentScore)
+    // {
+    //     if (scoreDisplay.Length > 0)
+    //     {
+    //         int spriteIndex = Mathf.Clamp(currentScore, 0, scoreDisplay[0].scoreSprites.Length - 1);
+    //         scoreDisplay[0].SetScore(spriteIndex);
+    //     }
+    // }
     
     public HealthDisplay healthDisplay;  // assign this in inspector
 
@@ -315,6 +372,28 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void RestartGame()
+    {
+        ResetGame();
+        Time.timeScale = 1f;
+        isPaused = false;
+        score = 0;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void ResetGame()
+    {
+        score = 0;
+
+        if (scoreDisplay == null)
+            scoreDisplay = FindObjectOfType<ScoreDisplay>();
+
+        if (scoreDisplay != null)
+        {
+            scoreDisplay.SetScore(score); // Update UI to zero
+        }
+    }
+    
     public void MainMenu()
     {
         Time.timeScale = 1f;
@@ -326,9 +405,21 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         isPaused = false;
+        GameManager.instance.RestartGame();
         SceneManager.LoadScene("SampleScene");
     }
 
+    // public void ShowDeathScreen()
+    // {
+    //     if (deathScreen != null)
+    //     {
+    //         deathScreen.SetActive(true);
+    //         if (gameHUD != null) gameHUD.SetActive(false);
+    //         if (pauseMenu != null) pauseMenu.SetActive(false);
+    //     }
+    //     Time.timeScale = 0f;
+    // }
+    
     public void ShowDeathScreen()
     {
         if (deathScreen != null)
@@ -337,6 +428,10 @@ public class GameManager : MonoBehaviour
             if (gameHUD != null) gameHUD.SetActive(false);
             if (pauseMenu != null) pauseMenu.SetActive(false);
         }
+    
+        // Reset score when death screen is shown
+        ResetGame();  // This resets score and updates UI
+    
         Time.timeScale = 0f;
     }
 

@@ -7221,6 +7221,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2478956900258723335, guid: 59dd14266a5eaec4d99d107b4e3689af, type: 3}
+      propertyPath: nextSceneBuildIndex
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2876736045389540195, guid: 59dd14266a5eaec4d99d107b4e3689af, type: 3}
       propertyPath: m_Name
       value: Door

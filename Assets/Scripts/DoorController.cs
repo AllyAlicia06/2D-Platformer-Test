@@ -10,6 +10,8 @@ public class DoorController : MonoBehaviour
     public Scene nextScene;
     private bool isPlayerNear = false;
     
+    public int nextSceneBuildIndex;
+    
     private void Start()
     {
         lockedDoorText.SetActive(false);
@@ -18,9 +20,11 @@ public class DoorController : MonoBehaviour
 
     private void Update()
     {
-        if (isPlayerNear && GameManager.instance.score >= 5)
+        if (isPlayerNear)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            Debug.Log("Player near. Score: " + GameManager.instance.score);
+
+            if (GameManager.instance.score >= 5 && Input.GetKeyDown(KeyCode.E))
             {
                 LoadNextScene();
             }
@@ -60,9 +64,16 @@ public class DoorController : MonoBehaviour
 
     void LoadNextScene()
     {
-        if (nextScene != null)
+        Debug.Log("Attempting to load scene with index: " + nextSceneBuildIndex);
+
+        if (nextSceneBuildIndex >= 0 && nextSceneBuildIndex < SceneManager.sceneCountInBuildSettings)
         {
-            SceneManager.LoadScene(nextScene.buildIndex);
+            SceneManager.LoadScene(nextSceneBuildIndex);
+        }
+        else
+        {
+            Debug.LogError("Invalid build index! Scene not found in Build Settings.");
         }
     }
+
 }
