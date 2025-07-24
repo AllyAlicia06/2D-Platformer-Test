@@ -30,15 +30,6 @@ public class PlayerController : MonoBehaviour
     public GameObject deathScreen;
     private bool isDead = false;
     
-    // void Start()
-    // {
-    //     rb = GetComponent<Rigidbody2D>();
-    //     rb.freezeRotation = true; //so the player doesnt weirdly rotate when falling
-    //     anim = GetComponent<Animator>();
-    //     currentHealth = maxHealth;
-    //     UpdateHealthVisual();
-    // }
-    
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -126,36 +117,12 @@ public class PlayerController : MonoBehaviour
             transform.localScale = scale;
         }
         
-        /*//test damage taken
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            TakeDamage(1);
-        }
-        
-        //test health regen
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Heal(1);
-        }*/
-        
         //fall death
         if (transform.position.y < -10)
         {
             Die();
         }
     }
-
-    // public void TakeDamage(int damage)
-    // {
-    //     currentHealth -= damage;
-    //     currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
-    //     UpdateHealthVisual();
-    //
-    //     if (currentHealth <= 0)
-    //     {
-    //         Die();
-    //     }
-    // }
     
     public void TakeDamage(int damage)
     {
@@ -176,19 +143,6 @@ public class PlayerController : MonoBehaviour
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
         UpdateHealthVisual();
     }
-    
-    // public void Die()
-    // {
-    //     isDead = true;
-    //     
-    //     if (deathScreen != null)
-    //     {
-    //         deathScreen.SetActive(true);
-    //     }
-    //     
-    //     //restart level after waiting for 2 seconds
-    //     StartCoroutine(WaitBeforeRestart());
-    // }
     
     public void Die()
     {
@@ -213,14 +167,6 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
-    
-    // void UpdateHealthVisual()
-    // {
-    //     if (healthDisplay != null)
-    //     {
-    //         healthDisplay.SetHealth(currentHealth);
-    //     }
-    // }
     
     void UpdateHealthVisual()
     {
